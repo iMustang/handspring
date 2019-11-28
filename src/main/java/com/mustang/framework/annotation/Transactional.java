@@ -7,6 +7,7 @@ import java.lang.annotation.Target;
 
 /**
  * Transactional
+ * 事务注解
  *
  * @author: xMustang
  * @since: 1.0
