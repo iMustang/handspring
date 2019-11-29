@@ -2,13 +2,15 @@ package com.mustang.framework.constant;
 
 /**
  * ConfigConstant
+ * <p>
+ * 定义该手写框架需要哪些配置项，这些配置项需要用户在使用框架时在配置文件中显式定义。
  *
  * @author: xMustang
  * @since: 1.0
  */
 public interface ConfigConstant {
 	// 配置文件名称
-	String CONFIG_FILE = "handwritten.properties";
+	String CONFIG_FILE = "handwritten.properties"; // 规定用户使用该框架提供的配置文件名称
 
 	// 数据源
 	String JDBC_DRIVER = "handwritten.framework.jdbc.driver";

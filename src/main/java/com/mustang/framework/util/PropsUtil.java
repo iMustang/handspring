@@ -16,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public final class PropsUtil {
-
 	public static Properties loadProps(String fileName) {
 		Properties props = null;
 		InputStream is = null;

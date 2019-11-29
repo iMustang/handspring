@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * DataBaseHelper
+ * 数据库操作助手类，可以通过该助手类进行增删改查，事务等一系列的数据库操作。
  *
  * @author: xMustang
  * @since: 1.0

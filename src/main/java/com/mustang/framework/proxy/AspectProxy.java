@@ -6,6 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * AspectProxy
+ * <p>
+ * 抽象切面类，切面类继承该抽象切面类，并添加@Aspect
+ * 类中定义了切入点判断和各种增强
  *
  * @author: xMustang
  * @since: 1.0
@@ -13,13 +16,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AspectProxy implements Proxy {
 	@Override
+	//当执行 doProxy() 方法时，会先进行切入点判断，再执行前置增强，代理链的下一个doProxyChain()方法，后置增强等。
 	public Object doProxy(ProxyChain proxyChain) throws Throwable {
 		Object result;
 
 		Class<?> cls = proxyChain.getTargetClass();
 		Method method = proxyChain.getTargetMethod();
 		Object[] params = proxyChain.getMethodParams();
-
 
 		begin();
 		try {
@@ -42,13 +45,6 @@ public class AspectProxy implements Proxy {
 	}
 
 	/**
-	 * 开始增强
-	 */
-	public void begin() {
-
-	}
-
-	/**
 	 * 切入点判断
 	 *
 	 * @param method
@@ -58,6 +54,13 @@ public class AspectProxy implements Proxy {
 	 */
 	public boolean intercept(Method method, Object[] params) throws Throwable {
 		return true;
+	}
+
+	/**
+	 * 开始增强
+	 */
+	public void begin() {
+
 	}
 
 	/**

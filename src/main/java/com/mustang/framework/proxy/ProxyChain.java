@@ -19,7 +19,7 @@ public class ProxyChain {
 	private final MethodProxy methodProxy;// 方法代理
 	private final Object[] methodParams;// 方法参数
 
-	private List<Proxy> proxyList;// 代理列表
+	private List<Proxy> proxyList;// 代理列表，当执行doProxyChain() 方法时会按照顺序执行增强，最后再执行目标方法
 	private int proxyIndex = 0;// 代理索引
 
 	public ProxyChain(Class<?> targetClass, Object targetObject,
@@ -46,7 +46,7 @@ public class ProxyChain {
 	}
 
 	/**
-	 * 递归执行
+	 * 递归执行代理链上代理对象的增强方法，最后再执行目标对象的方法。
 	 *
 	 * @return
 	 * @throws Throwable

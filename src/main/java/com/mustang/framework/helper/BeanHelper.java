@@ -15,16 +15,18 @@ import com.mustang.framework.util.ReflectionUtil;
  */
 public final class BeanHelper {
 	/**
-	 * BEAN_MAP相当于一个Spring容器, 拥有应用所有bean的实例
+	 * BEAN_MAP相当于一个Spring容器，拥有应用所有bean的实例，在本框架中是带@Controller、@Service的Bean
 	 */
-	private static final Map<Class<?>, Object> BEAN_MAP = new HashMap<>();
+	private static final Map<Class<?>, Object> BEAN_MAP;
 
 	static {
-		//获取应用中的所有bean
+		BEAN_MAP = new HashMap<>();
+
+		//获取应用中的所有bean（是带@Controller、@Service的Bean）
 		Set<Class<?>> beanClassSet = ClassHelper.getBeanClassSet();
 
 		for (Class<?> beanClass : beanClassSet) {
-			//将bean实例化, 并放入bean容器中
+			//将bean实例化，并放入bean容器中
 			Object obj = ReflectionUtil.newInstance(beanClass);
 			BEAN_MAP.put(beanClass, obj);
 		}

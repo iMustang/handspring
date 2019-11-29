@@ -8,15 +8,20 @@ import java.util.Map;
 import java.util.Set;
 
 import com.mustang.framework.annotation.Aspect;
+import com.mustang.framework.annotation.Service;
 import com.mustang.framework.proxy.AspectProxy;
 import com.mustang.framework.proxy.Proxy;
 import com.mustang.framework.proxy.ProxyFactory;
+import com.mustang.framework.proxy.TransactionProxy;
 import com.mustang.framework.util.ClassUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
 /**
  * AopHelper
+ * 用来初始化整个AOP框架
+ * <p>
+ * 初始化AOP框架实际上就是用代理对象覆盖掉Bean容器中的目标对象，这样根据目标类的Class对象从Bean容器中获取到的就是代理对象，从而达到了对目标对象增强的目的。
  *
  * @author: xMustang
  * @since: 1.0
@@ -45,7 +50,7 @@ public final class AopHelper {
 	}
 
 	/**
-	 * 获取切面类-目标类集合的映射
+	 * 获取切面类-目标类集合的映射，Map<切面类,Set<目标类>>
 	 *
 	 * @return
 	 * @throws Exception
@@ -53,11 +58,12 @@ public final class AopHelper {
 	private static Map<Class<?>, Set<Class<?>>> createAspectMap() throws Exception {
 		HashMap<Class<?>, Set<Class<?>>> aspectMap = new HashMap<>();
 		addAspectProxy(aspectMap);
+		addTransactionProxy(aspectMap);
 		return aspectMap;
 	}
 
 	/**
-	 * 获取普通切面类-目标类集合的映射
+	 * 获取切面类-目标类集合的映射，Map<切面类, Set<目标类>>
 	 *
 	 * @param aspectMap
 	 * @throws Exception
@@ -69,7 +75,9 @@ public final class AopHelper {
 			if (aspectClass.isAnnotationPresent(Aspect.class)) {
 				Aspect aspect = aspectClass.getAnnotation(Aspect.class);
 
-				//与该切面对应的目标类集合
+				// 与该切面对应的目标类集合
+				// 如@Aspect(pkg = "com.xmustang.controller", cls = "UserController")，目标类是com.xmustang.controller
+				// .UserController
 				Set<Class<?>> targetClassSet = createTargetClassSet(aspect);
 				aspectMap.put(aspectClass, targetClassSet);
 			}
@@ -77,7 +85,19 @@ public final class AopHelper {
 	}
 
 	/**
-	 * 根据@Aspect定义的包名和类名去获取对应的目标类集合
+	 * 获取事务切面类-目标类集合的映射，Map<事务切面, 目标类>
+	 * <p>
+	 * 该框架默认所有@Service注解类都被代理了
+	 *
+	 * @param aspectMap
+	 */
+	private static void addTransactionProxy(Map<Class<?>, Set<Class<?>>> aspectMap) {
+		Set<Class<?>> serviceClassSet = ClassHelper.getClassSetByAnnotation(Service.class);
+		aspectMap.put(TransactionProxy.class, serviceClassSet);
+	}
+
+	/**
+	 * 根据@Aspect定义的包名和类名去获取对应的目标类集合，Set<目标类>
 	 *
 	 * @param aspect
 	 * @return
@@ -94,21 +114,22 @@ public final class AopHelper {
 		if (!"".equals(pkg) && !"".equals(cls)) {
 			targetClassSet.add(Class.forName(pkg + "." + cls));
 		} else if (!"".equals(pkg)) {
-			// 如果包名不为空, 类名为空, 则添加该包名下所有类
+			// 如果包名不为空，类名为空，则添加该包名下所有类
 			targetClassSet.addAll(ClassUtil.getClassSet(pkg));
 		}
 		return targetClassSet;
 	}
 
 	/**
-	 * 将切面类-目标类集合的映射关系 转化为 目标类-切面对象列表的映射关系
+	 * 将切面类-目标类集合的映射关系（Map<切面类,Set<目标类>>） 转化为 目标类-切面对象列表的映射关系，即Map<目标类,List<切面类实例>>
 	 *
 	 * @param aspectMap
 	 * @return
 	 * @throws IllegalAccessException
 	 * @throws InstantiationException
 	 */
-	private static Map<Class<?>, List<Proxy>> createTargetMap(Map<Class<?>, Set<Class<?>>> aspectMap) throws IllegalAccessException, InstantiationException {
+	private static Map<Class<?>, List<Proxy>> createTargetMap(Map<Class<?>,
+			Set<Class<?>>> aspectMap) throws IllegalAccessException, InstantiationException {
 		Map<Class<?>, List<Proxy>> targetMap = new HashMap<>();
 		for (Map.Entry<Class<?>, Set<Class<?>>> proxyEntry : aspectMap.entrySet()) {
 			//切面类

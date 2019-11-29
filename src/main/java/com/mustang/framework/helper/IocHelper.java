@@ -28,7 +28,7 @@ public final class IocHelper {
 				//bean的class类
 				Class<?> beanClass = beanEntry.getKey();
 
-				// bean的实例
+				//bean的实例
 				Object beanInstance = beanEntry.getValue();
 
 				Field[] beanFields = beanClass.getDeclaredFields();
@@ -57,15 +57,15 @@ public final class IocHelper {
 	 * @param interfaceClass
 	 * @return
 	 */
-	public static Class<?> findImplementClass(Class<?> interfaceClass) {
-		Class<?> inplementClass = interfaceClass;
+	private static Class<?> findImplementClass(Class<?> interfaceClass) {
+		Class<?> implementClass = interfaceClass;
 
 		// 接口对应的所有实现类
 		Set<Class<?>> classSetSuper = ClassHelper.getClassSetBySuper(interfaceClass);
 		if (CollectionUtils.isNotEmpty(classSetSuper)) {
 			// 获取第一个实现类
-			inplementClass = classSetSuper.iterator().next();
+			implementClass = classSetSuper.iterator().next();
 		}
-		return inplementClass;
+		return implementClass;
 	}
 }

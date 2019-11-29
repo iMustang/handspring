@@ -7,7 +7,7 @@ import com.mustang.framework.util.PropsUtil;
 
 /**
  * ConfigHelper
- * ConfigHelper 类就可以加载用户自定义的配置文件
+ * 加载用户自定义的配置文件
  *
  * @author: xMustang
  * @since: 1.0

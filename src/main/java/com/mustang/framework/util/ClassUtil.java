@@ -45,7 +45,7 @@ public class ClassUtil {
 	}
 
 	/**
-	 * 加载类（默认将初始化类）
+	 * 加载类（默认将初始化类），也就是执行 static 初始化代码，初始化 static 字段
 	 *
 	 * @param className
 	 * @return
@@ -55,7 +55,7 @@ public class ClassUtil {
 	}
 
 	/**
-	 * 获取指定包名下的所有类
+	 * 获取指定包名下的所有类，没有加载类。loadClass(className, false)
 	 *
 	 * @param packageName
 	 * @return
@@ -70,6 +70,7 @@ public class ClassUtil {
 					String protocol = url.getProtocol();
 					if ("file".equals(protocol)) {
 						String packagePath = url.getPath().replaceAll("%20", " ");
+						// packageName是包名，packagePath是包名转化为路径，即.转化为/
 						addClass(classSet, packagePath, packageName);
 					} else if ("jar".equals(protocol)) {
 						JarURLConnection jarURLConnection;
@@ -114,11 +115,13 @@ public class ClassUtil {
 				}
 				doAddClass(classSet, className);
 			} else {
+				// 是路径
 				String subPackagePath = fileName;
 				if (StringUtils.isNotEmpty(packagePath)) {
 					subPackagePath = packagePath + "/" + subPackagePath;
 				}
 
+				// 包名也要加上这个路径
 				String subPackageName = fileName;
 				if (StringUtils.isNotEmpty(packageName)) {
 					subPackageName = packageName + "." + subPackageName;
