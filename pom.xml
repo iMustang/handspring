@@ -122,6 +122,22 @@
                     </execution>
                 </executions>
             </plugin>
+            <!-- 设置编译源代码的JDK版本 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.0.2</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
         </plugins>
+
+        <resources>
+            <resource>
+                <directory>src/main/resource</directory>
+            </resource>
+        </resources>
     </build>
 </project>

@@ -1,0 +1,11 @@
+<beans>
+    <bean id="wheel" class="com.mustang.anotherkind.framework.easy.ioc.test.Wheel">
+        <property name="brand" value="Michelin"/>
+        <property name="specification" value="265/60 R18"/>
+    </bean>
+
+    <bean id="car" class="com.mustang.anotherkind.framework.easy.ioc.test.Car">
+        <property name="name" value="Mercedes Benz G 500"/>
+        <property name="wheel" ref="wheel"/>
+    </bean>
+</beans>
